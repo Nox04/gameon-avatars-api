@@ -1,16 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { avatars } from "../../data/avatars";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
 
-const handler = (_req: NextApiRequest, res: NextApiResponse) => {
+const prisma = new PrismaClient()
+
+const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    if (!Array.isArray(avatars)) {
-      throw new Error("Cannot find user data");
-    }
-
-    res.status(200).json(avatars);
-  } catch (err) {
-    res.status(500).json({ statusCode: 500, message: err.message });
+    const avatars = await prisma.avatar.findMany({
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        description: true,
+        attributes: {
+          select: {
+            trait_type: true,
+            value: true,
+          },
+        },
+      },
+    })
+    res.status(200).json(avatars)
+  } catch (err: any) {
+    res.status(500).json({ statusCode: 500, message: err.message })
   }
-};
+}
 
-export default handler;
+export default handler
