@@ -48,7 +48,8 @@ export function MainApp(props: Props) {
   }
 
   function onModalResult(result: boolean) {
-    if (!result) {
+    if (result) {
+    } else {
       closeEditor()
     }
   }

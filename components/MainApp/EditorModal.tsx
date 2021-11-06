@@ -46,7 +46,7 @@ export function EditorModal(props: Props) {
       String(
         avatar?.attributes.find((attr) => attr.trait_type === 'Seed')?.value
       ) || '',
-    dataUri: true,
+    base64: true,
     style: 'transparent',
     mode: 'include',
     ...options,
@@ -83,9 +83,11 @@ export function EditorModal(props: Props) {
     }
   }
 
-  React.useEffect(() => {
-    console.log(avatar)
-  }, [avatar])
+  function saveData() {
+    const node = document.getElementById('svg-image')
+    console.log(node)
+    props.onResult(true)
+  }
 
   const team =
     avatar?.attributes.find((attr) => attr.trait_type === 'Team')?.value || ''
@@ -155,7 +157,7 @@ export function EditorModal(props: Props) {
                     {action} your NFT
                   </Dialog.Title>
                   <div className="my-2 md:my-8 flex justify-center items-center w-full">
-                    <img src={svg} height={240} width={240} />
+                    <img src={svg} height={240} width={240} id="svg-image" />
                   </div>
                 </div>
               </div>
@@ -187,6 +189,7 @@ export function EditorModal(props: Props) {
                               className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
                               value={avatar?.name}
                               onChange={updateProperty}
+                              placeholder="Your name"
                             />
                           </div>
                         </div>
@@ -205,6 +208,7 @@ export function EditorModal(props: Props) {
                               className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
                               value={avatar?.description}
                               onChange={updateProperty}
+                              placeholder="Your role"
                             />
                           </div>
                         </div>
@@ -266,6 +270,7 @@ export function EditorModal(props: Props) {
                               className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
                               value={seed}
                               onChange={updateProperty}
+                              placeholder="You can type whatever you want here"
                             />
                           </div>
                         </div>
@@ -278,7 +283,7 @@ export function EditorModal(props: Props) {
                 <button
                   type="button"
                   className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white"
-                  onClick={() => onResult(true)}
+                  onClick={saveData}
                   disabled={processing}
                 >
                   <Image
