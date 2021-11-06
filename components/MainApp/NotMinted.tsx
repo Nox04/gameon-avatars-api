@@ -6,7 +6,7 @@ import animationData from '../../animations/mint.json'
 
 type Props = {
   status: NFTStatus
-  mintNFT: () => void
+  openEditor: () => void
 }
 
 const defaultOptions = {
@@ -26,7 +26,7 @@ export function NotMinted(props: Props) {
       <button
         type="button"
         className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        onClick={props.mintNFT}
+        onClick={props.openEditor}
       >
         <Image
           src={
@@ -38,7 +38,7 @@ export function NotMinted(props: Props) {
           height="32"
           alt="mint nft"
         />
-        <span className="ml-4">Mint your NFT</span>
+        <span className="ml-4">Create your NFT</span>
       </button>
     </div>
   )

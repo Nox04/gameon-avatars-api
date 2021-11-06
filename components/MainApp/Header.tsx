@@ -5,6 +5,7 @@ import { LogoutModal } from './LogoutModal'
 type Props = {
   wallet: string
   disconnect: () => void
+  contractAddress: string
 }
 
 export function Header(props: Props) {
@@ -21,6 +22,12 @@ export function Header(props: Props) {
     setShowModal(false)
   }
 
+  function handleKeypress(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (['Enter', 'Space'].includes(e.code)) {
+      displayLogoutModal()
+    }
+  }
+
   const readableAddress = `${props.wallet.substr(0, 5)}...${props.wallet.substr(
     props.wallet.length - 4,
     props.wallet.length - 1
@@ -31,13 +38,26 @@ export function Header(props: Props) {
       <div>
         <Image src="/assets/gameon.svg" width="170" height="40" alt="gameon" />
       </div>
-      <div
-        className="inline-flex items-center p-2 bg-indigo-700 rounded-xl cursor-pointer"
-        onClick={displayLogoutModal}
-      >
-        <Image src="/assets/wallet.svg" width="28" height="28" alt="wallet" />
-        <span className="pt-1 ml-2">{readableAddress}</span>
+      <div className="flex space-x-8">
+        <a
+          href={`https://opensea.io/assets/${props.contractAddress}/`}
+          className="hidden sm:flex h-full  justify-center items-center"
+          target="_blank"
+        >
+          Explore Collection
+        </a>
+        <div
+          className="inline-flex items-center p-2 bg-indigo-700 rounded-xl cursor-pointer"
+          onClick={displayLogoutModal}
+          role="button"
+          tabIndex={0}
+          onKeyPress={(e) => handleKeypress(e)}
+        >
+          <Image src="/assets/wallet.svg" width="28" height="28" alt="wallet" />
+          <span className="pt-1 ml-2">{readableAddress}</span>
+        </div>
       </div>
+
       <LogoutModal
         open={showModal}
         onResult={onModalResult}

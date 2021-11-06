@@ -40,3 +40,8 @@ export enum NFTStatus {
 export type LocalData = {
   disconnected: boolean
 }
+
+export enum EditorStatus {
+  EDITOR_OPEN,
+  EDITOR_CLOSED,
+}

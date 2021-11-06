@@ -9,6 +9,8 @@
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@dicebear/avatars": "^4.10.0",
+    "@dicebear/avatars-avataaars-sprites": "^4.10.0",
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.5",
     "@prisma/client": "^3.4.1",

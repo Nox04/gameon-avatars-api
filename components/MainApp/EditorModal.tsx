@@ -1,0 +1,301 @@
+import { Fragment, useRef } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import React from 'react'
+import { XIcon } from '@heroicons/react/solid'
+import { Avatar, NFTStatus } from '../../types'
+import Image from 'next/image'
+import { createAvatar } from '@dicebear/avatars'
+import * as style from '@dicebear/avatars-avataaars-sprites'
+
+type Props = {
+  open: boolean
+  onResult: (result: boolean) => void
+  nftId: number
+  status: NFTStatus
+  avatar: Avatar
+  setWipAvatar: (avatar: Avatar) => void
+}
+
+export function EditorModal(props: Props) {
+  const { open, onResult, nftId, avatar } = props
+  const action = nftId > 0 ? 'Update' : 'Mint'
+  const processing = [NFTStatus.MINTING, NFTStatus.UPDATING_METADATA].includes(
+    props.status
+  )
+  const [options, setOptions] = React.useState({
+    top: ['longHair'],
+    topChance: 100,
+    hatColor: ['black'],
+    hairColor: ['auburn'],
+    accessories: [],
+    accessoriesChance: 100,
+    facialHair: [],
+    facialHairChance: 100,
+    facialHairColor: [],
+    clothes: ['blazer'],
+    clothesColor: ['black'],
+    eyes: ['close'],
+    eyebrow: ['angry'],
+    mouth: ['concerned'],
+    skin: ['yellow'],
+  })
+
+  //@ts-ignore
+  const svg = createAvatar(style, {
+    seed:
+      String(
+        avatar?.attributes.find((attr) => attr.trait_type === 'Seed')?.value
+      ) || '',
+    dataUri: true,
+    style: 'transparent',
+    mode: 'include',
+    ...options,
+  })
+
+  function updateProperty(
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) {
+    const property = e.currentTarget.id
+    const avatar = props.avatar
+    if (property === 'name') {
+      props.setWipAvatar({ ...avatar, name: e.target.value })
+    } else if (property === 'role') {
+      props.setWipAvatar({ ...avatar, description: e.target.value })
+    } else {
+      let attributes = avatar.attributes
+
+      const oldIndex = attributes.findIndex(
+        (attr) => attr.trait_type === property
+      )
+
+      if (oldIndex === -1) {
+        attributes.push({ trait_type: property, value: e.target.value })
+      } else {
+        attributes[oldIndex] = { trait_type: property, value: e.target.value }
+      }
+
+      props.setWipAvatar({
+        ...avatar,
+        attributes,
+      })
+    }
+  }
+
+  React.useEffect(() => {
+    console.log(avatar)
+  }, [avatar])
+
+  const team =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Team')?.value || ''
+
+  const country =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Country')?.value ||
+    ''
+
+  const seed =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Seed')?.value || ''
+
+  const viewAdButtonRef = useRef(null)
+  return (
+    <Transition.Root show={open} as={Fragment}>
+      <Dialog
+        as="div"
+        static
+        className="fixed z-10 inset-0 overflow-y-auto"
+        initialFocus={viewAdButtonRef}
+        open={open}
+        onClose={() => onResult(false)}
+      >
+        <div className="flex justify-center min-h-screen p-4 text-center sm:px-4 sm:py-0">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+          <span
+            className="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+          >
+            &#8203;
+          </span>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enterTo="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div className="flex flex-col align-bottom w-full bg-gray-700 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 lg:my-20 sm:align-middle sm:max-w-5xl sm:w-full sm:p-6">
+              <div className="block absolute top-0 right-0 pt-4 pr-4">
+                <button
+                  type="button"
+                  className="bg-gray-900 rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={() => onResult(false)}
+                >
+                  <span className="sr-only">Close</span>
+                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="sm:flex sm:items-start">
+                <div className="mt-2 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg leading-6 font-medium text-white"
+                  >
+                    {action} your NFT
+                  </Dialog.Title>
+                  <div className="my-2 md:my-8 flex justify-center items-center w-full">
+                    <img src={svg} height={240} width={240} />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-grow">
+                <form className="space-y-8 divide-y divide-gray-200">
+                  <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+                    <div className="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
+                      <div>
+                        <h3 className="text-lg leading-6 font-medium text-white">
+                          Your information
+                        </h3>
+                        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                          This is the NFT metadata.
+                        </p>
+                      </div>
+                      <div className="space-y-6 sm:space-y-5">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Name
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <input
+                              type="text"
+                              id="name"
+                              autoComplete="name"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={avatar?.name}
+                              onChange={updateProperty}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="role"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Role
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <input
+                              type="text"
+                              id="role"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={avatar?.description}
+                              onChange={updateProperty}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="team"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Team
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Team"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={team}
+                              onChange={updateProperty}
+                            >
+                              <option>Product</option>
+                              <option>Partnerships</option>
+                              <option>Platform</option>
+                              <option>Experiences</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="country"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Country
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Country"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={country}
+                              onChange={updateProperty}
+                            >
+                              <option>United States</option>
+                              <option>Canada</option>
+                              <option>Mexico</option>
+                              <option>Colombia</option>
+                              <option>Peru</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="seed"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Seed Paraphrase
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <input
+                              type="text"
+                              id="Seed"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={seed}
+                              onChange={updateProperty}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div className="mt-5 flex justify-center">
+                <button
+                  type="button"
+                  className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                  onClick={() => onResult(true)}
+                  disabled={processing}
+                >
+                  <Image
+                    src={
+                      processing ? '/assets/loading.svg' : '/assets/pick.svg'
+                    }
+                    width="32"
+                    height="32"
+                    alt="mint nft"
+                  />
+                  <span className="ml-4">{action} NFT</span>
+                </button>
+              </div>
+            </div>
+          </Transition.Child>
+        </div>
+      </Dialog>
+    </Transition.Root>
+  )
+}
