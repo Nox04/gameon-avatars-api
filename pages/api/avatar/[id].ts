@@ -27,8 +27,9 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       res
         .status(404)
         .json({ statusCode: 404, message: 'Cannot find user data' })
+    } else {
+      res.status(200).json(avatar)
     }
-    res.status(200).json(avatar)
   } catch (err: any) {
     res.status(500).json({ statusCode: 500, message: err.message })
   }
