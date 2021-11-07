@@ -5,8 +5,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
-    "prisma:generate": "prisma generate"
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@dicebear/avatars": "^4.10.0",

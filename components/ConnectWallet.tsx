@@ -18,14 +18,23 @@ type Props = {
 }
 
 const ConnectWallet = (props: Props) => {
+  function installWallet() {
+    window.open(
+      'https://metamask.app.link/dapp/avatars.juanangarita.com',
+      '_blank'
+    )
+  }
   return (
     <>
       <Lottie options={defaultOptions} height={300} width={300} />
       <span className="text-4xl font-bold">GameOn Avatars</span>
       <button
         className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={props.walletStatus === WalletStatus.NOT_INSTALLED}
-        onClick={props.connectWallet}
+        onClick={
+          props.walletStatus === WalletStatus.NOT_INSTALLED
+            ? installWallet
+            : props.connectWallet
+        }
         tabIndex={1}
       >
         <Image
@@ -40,12 +49,6 @@ const ConnectWallet = (props: Props) => {
         />
         <span className="ml-4">Connect your wallet</span>
       </button>
-      {props.walletStatus === WalletStatus.NOT_INSTALLED ? (
-        <span className="text-center">
-          It looks like you have not metamask installed. Please install the app
-          or web extension before using GameOn Avatars
-        </span>
-      ) : null}
     </>
   )
 }
