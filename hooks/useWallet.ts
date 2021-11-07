@@ -31,7 +31,7 @@ export function useWallet() {
   React.useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', checkIfWalletIsConnected)
-      //window.ethereum.on('chainChanged', () => window.location.reload())
+      window.ethereum.on('chainChanged', () => window.location.reload())
     }
     return function cleanupListener() {
       if (window.ethereum) {
@@ -39,7 +39,7 @@ export function useWallet() {
           'accountsChanged',
           checkIfWalletIsConnected
         )
-        //window.ethereum.removeListener('chainChanged', window.location.reload())
+        window.ethereum.removeListener('chainChanged', window.location.reload())
       }
     }
   }, [])
@@ -62,7 +62,7 @@ export function useWallet() {
   }
 
   function checkNetwork() {
-    if (window.ethereum.networkVersion !== '1337') {
+    if (window.ethereum.networkVersion !== '137') {
       setStatus(WalletStatus.NOT_IN_NETWORK)
     }
   }
