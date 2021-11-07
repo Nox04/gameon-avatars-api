@@ -39,7 +39,9 @@ export function useWallet() {
           'accountsChanged',
           checkIfWalletIsConnected
         )
-        window.ethereum.removeListener('chainChanged', window.location.reload())
+        window.ethereum.removeListener('chainChanged', () =>
+          window.location.reload()
+        )
       }
     }
   }, [])
