@@ -77,6 +77,8 @@ export function useWallet() {
         params: [{ chainId: '0x89' }],
       })
     } catch (switchError: any) {
+      toast.error(switchError.code)
+
       if (switchError.code === 4902) {
         try {
           await window.ethereum.request({
