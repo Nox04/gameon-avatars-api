@@ -38,7 +38,7 @@ export function NotMinted(props: Props) {
           height="32"
           alt="mint nft"
         />
-        <span className="ml-4">Create your NFT</span>
+        <span className="ml-4">Design your NFT</span>
       </button>
     </div>
   )
