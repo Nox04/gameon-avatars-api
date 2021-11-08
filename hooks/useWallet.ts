@@ -77,31 +77,24 @@ export function useWallet() {
         params: [{ chainId: '0x89' }],
       })
     } catch (switchError: any) {
-      toast.error(switchError.code)
-
-      if (switchError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              {
-                chainId: '0x89',
-                chainName: 'Polygon Mainnet',
-                nativeCurrency: {
-                  name: 'MATIC',
-                  symbol: 'MATIC',
-                  decimals: 18,
-                },
-                rpcUrls: ['https://rpc-mainnet.maticvigil.com/'],
-                blockExplorerUrls: ['https://polygonscan.com/'],
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x89',
+              chainName: 'Polygon Mainnet',
+              nativeCurrency: {
+                name: 'MATIC',
+                symbol: 'MATIC',
+                decimals: 18,
               },
-            ],
-          })
-        } catch (addError) {
-          toast.error(switchError.message)
-          checkIfWalletIsConnected()
-        }
-      } else {
+              rpcUrls: ['https://rpc-mainnet.maticvigil.com/'],
+              blockExplorerUrls: ['https://polygonscan.com/'],
+            },
+          ],
+        })
+      } catch (addError) {
         toast.error(switchError.message)
         checkIfWalletIsConnected()
       }
