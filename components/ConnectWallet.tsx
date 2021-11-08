@@ -18,20 +18,20 @@ type Props = {
 }
 
 const ConnectWallet = (props: Props) => {
-  function installWallet() {
-    window.open(
-      'https://metamask.app.link/dapp/avatars.juanangarita.com',
-      '_blank'
-    )
-  }
+  // function installWallet() {
+  //   window.open(
+  //     'https://metamask.app.link/dapp/avatars.juanangarita.com',
+  //     '_blank'
+  //   )
+  // }
 
-  function connectToWallet() {
-    if (props.walletStatus === WalletStatus.NOT_INSTALLED) {
-      installWallet()
-    } else {
-      props.connectWallet()
-    }
-  }
+  // function connectToWallet() {
+  //   if (props.walletStatus === WalletStatus.NOT_INSTALLED) {
+  //     installWallet()
+  //   } else {
+  //     props.connectWallet()
+  //   }
+  // }
 
   return (
     <>
@@ -39,7 +39,7 @@ const ConnectWallet = (props: Props) => {
       <span className="text-4xl font-bold">GameOn Avatars</span>
       <button
         className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        onClick={connectToWallet}
+        onClick={() => {}}
         tabIndex={1}
       >
         <Image
