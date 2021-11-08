@@ -31,7 +31,7 @@ export function useWallet() {
   React.useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', checkIfWalletIsConnected)
-      //window.ethereum.on('chainChanged', () => window.location.reload())
+      window.ethereum.on('chainChanged', () => window.location.reload())
     }
     return function cleanupListener() {
       if (window.ethereum) {
@@ -39,9 +39,9 @@ export function useWallet() {
           'accountsChanged',
           checkIfWalletIsConnected
         )
-        // window.ethereum.removeListener('chainChanged', () =>
-        //   window.location.reload()
-        // )
+        window.ethereum.removeListener('chainChanged', () =>
+          window.location.reload()
+        )
       }
     }
   }, [])
