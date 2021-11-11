@@ -35,10 +35,12 @@ export function useNFT(wallet: string) {
 
   React.useEffect(() => {
     const onAvatarMint = async (sender: string, tokenId: any) => {
-      if (avatarContract && tempAvatar) {
-        await upsertAvatar({ ...tempAvatar, id: String(tokenId.toNumber()) })
-        callback()
-        await fetchNFTId()
+      if (sender.toLowerCase() === wallet.toLowerCase()) {
+        if (avatarContract && tempAvatar) {
+          await upsertAvatar({ ...tempAvatar, id: String(tokenId.toNumber()) })
+          callback()
+          await fetchNFTId()
+        }
       }
     }
 
