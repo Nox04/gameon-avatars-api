@@ -17,8 +17,13 @@ type Props = {
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export function MainApp(props: Props) {
-  const { nftId, status, contractAddress } = useNFT(props.wallet)
-  const { data } = useSWR(nftId > 0 ? `/api/avatar/${nftId}` : null, fetcher)
+  const { nftId, status, contractAddress, fetchNFTId, mint } = useNFT(
+    props.wallet
+  )
+  const { data, mutate } = useSWR(
+    nftId > 0 ? `/api/avatar/${nftId}` : null,
+    fetcher
+  )
   const { wipAvatar, setWipAvatar, closeEditor, openEditor, editorStatus } =
     useEditor()
 
@@ -49,6 +54,9 @@ export function MainApp(props: Props) {
 
   function onModalResult(result: boolean) {
     if (result) {
+      closeEditor()
+      fetchNFTId()
+      mutate()
     } else {
       closeEditor()
     }
@@ -70,6 +78,7 @@ export function MainApp(props: Props) {
           status={status}
           avatar={wipAvatar}
           setWipAvatar={setWipAvatar}
+          mintAvatar={mint}
         />
       </div>
     </div>

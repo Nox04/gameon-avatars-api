@@ -17,6 +17,8 @@ import {
   mouthOptions,
   skinOptions,
 } from '../../utils/avatarOptions'
+import { upsertAvatar } from '../../services/api.service'
+import { toast } from 'react-toastify'
 
 type Props = {
   open: boolean
@@ -25,11 +27,11 @@ type Props = {
   status: NFTStatus
   avatar: Avatar
   setWipAvatar: (avatar: Avatar) => void
+  mintAvatar: (avatar: Avatar, callback: () => void) => Promise<void>
 }
 
 export function EditorModal(props: Props) {
   const { open, onResult, nftId, avatar } = props
-  const canvas = React.useRef<HTMLImageElement>(null)
   const action = nftId > 0 ? 'Update' : 'Mint'
   const processing = [NFTStatus.MINTING, NFTStatus.UPDATING_METADATA].includes(
     props.status
@@ -110,14 +112,23 @@ export function EditorModal(props: Props) {
     setOptions((opt) => ({ ...opt, ...userOptions }))
   }, [props.avatar])
 
-  function saveData() {
-    if (canvas.current) {
-      const link = document.createElement('a')
-      link.download = 'my-image.png'
-      link.href = svg
-      link.click()
+  async function saveData() {
+    try {
+      const editedAvatar = { ...props.avatar, image: svg }
+      if (props.nftId === 0) {
+        await props.mintAvatar(editedAvatar, () => props.onResult(true))
+      } else {
+        await upsertAvatar(editedAvatar)
+        props.onResult(true)
+      }
+    } catch (e) {
+      toast.error('Error saving the NFT data, please try again later')
     }
-    props.onResult(true)
+
+    // const link = document.createElement('a')
+    // link.download = 'my-image.png'
+    // link.href = svg
+    // link.click()
   }
 
   const team =
@@ -207,7 +218,7 @@ export function EditorModal(props: Props) {
                     {action} your NFT
                   </Dialog.Title>
                   <div className="my-2 md:my-4 flex justify-center items-center w-full">
-                    <img ref={canvas} src={svg} height={240} width={240} />
+                    <img src={svg} height={240} width={240} />
                   </div>
                 </div>
               </div>

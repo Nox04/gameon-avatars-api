@@ -64,7 +64,7 @@ export function useWallet() {
   }
 
   function checkNetwork() {
-    if (window.ethereum.networkVersion !== '137') {
+    if (window.ethereum.networkVersion !== '1337') {
       setStatus(WalletStatus.NOT_IN_NETWORK)
     }
   }

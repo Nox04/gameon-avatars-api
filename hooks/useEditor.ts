@@ -7,7 +7,19 @@ export function useEditor(avatar?: Avatar) {
     name: '',
     image: '',
     description: '',
-    attributes: [],
+    attributes: [
+      { trait_type: 'Country', value: 'Canada' },
+      { trait_type: 'Team', value: 'Experiences' },
+      { trait_type: 'Top', value: 'straight02' },
+      { trait_type: 'Hat Color', value: 'black' },
+      { trait_type: 'Hair Color', value: 'platinum' },
+      { trait_type: 'Clothes', value: 'hoodie' },
+      { trait_type: 'Clothes Color', value: 'black' },
+      { trait_type: 'Eyes', value: 'close' },
+      { trait_type: 'Skin', value: 'yellow' },
+      { trait_type: 'Mouth', value: 'twinkle' },
+      { trait_type: 'Eyebrow', value: 'default' },
+    ],
   })
 
   const [editorStatus, setEditorStatus] = React.useState<EditorStatus>(

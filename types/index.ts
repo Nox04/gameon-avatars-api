@@ -1,6 +1,6 @@
 type Attribute = {
   trait_type: string
-  value: string | number
+  value: string
 }
 
 export type Avatar = {

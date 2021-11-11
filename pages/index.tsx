@@ -7,7 +7,6 @@ import { WalletStatus } from '../types'
 
 const IndexPage = () => {
   const { wallet, status, connect, switchNetwork, disconnect } = useWallet()
-
   function renderContent() {
     switch (status) {
       case WalletStatus.CONNECTED:
