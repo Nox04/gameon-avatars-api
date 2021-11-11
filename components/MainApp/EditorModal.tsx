@@ -6,6 +6,17 @@ import { Avatar, NFTStatus } from '../../types'
 import Image from 'next/image'
 import { createAvatar } from '@dicebear/avatars'
 import * as style from '@dicebear/avatars-avataaars-sprites'
+import {
+  topOptions,
+  clotherColorOptions,
+  clothesOptions,
+  eyebrowOptions,
+  eyesOptions,
+  hairColorOptions,
+  hatColorOptions,
+  mouthOptions,
+  skinOptions,
+} from '../../utils/avatarOptions'
 
 type Props = {
   open: boolean
@@ -18,37 +29,35 @@ type Props = {
 
 export function EditorModal(props: Props) {
   const { open, onResult, nftId, avatar } = props
+  const canvas = React.useRef<HTMLImageElement>(null)
   const action = nftId > 0 ? 'Update' : 'Mint'
   const processing = [NFTStatus.MINTING, NFTStatus.UPDATING_METADATA].includes(
     props.status
   )
   const [options, setOptions] = React.useState({
-    top: ['longHair'],
+    top: ['straight02'],
     topChance: 100,
     hatColor: ['black'],
-    hairColor: ['auburn'],
+    hairColor: ['platinum'],
     accessories: [],
     accessoriesChance: 100,
     facialHair: [],
     facialHairChance: 100,
     facialHairColor: [],
-    clothes: ['blazer'],
+    clothes: ['hoodie'],
     clothesColor: ['black'],
     eyes: ['close'],
-    eyebrow: ['angry'],
-    mouth: ['concerned'],
+    eyebrow: ['default'],
+    mouth: ['twinkle'],
     skin: ['yellow'],
   })
 
   //@ts-ignore
   const svg = createAvatar(style, {
-    seed:
-      String(
-        avatar?.attributes.find((attr) => attr.trait_type === 'Seed')?.value
-      ) || '',
-    base64: true,
+    seed: '',
     style: 'transparent',
     mode: 'include',
+    base64: true,
     ...options,
   })
 
@@ -75,7 +84,6 @@ export function EditorModal(props: Props) {
       } else {
         attributes[oldIndex] = { trait_type: property, value: e.target.value }
       }
-
       props.setWipAvatar({
         ...avatar,
         attributes,
@@ -83,21 +91,63 @@ export function EditorModal(props: Props) {
     }
   }
 
+  React.useEffect(() => {
+    const formatedAttributes = props.avatar.attributes
+      .filter((p) => !['Country', 'Team'].includes(p.trait_type))
+      .map((p) => ({
+        ...p,
+        trait_type: `${p.trait_type.charAt(0).toLocaleLowerCase()}${p.trait_type
+          .substring(1)
+          .replace(' ', '')}`,
+      }))
+    const userOptions = {}
+
+    formatedAttributes.forEach((attr) => {
+      //@ts-ignore
+      userOptions[attr.trait_type] = [attr.value]
+    })
+
+    setOptions((opt) => ({ ...opt, ...userOptions }))
+  }, [props.avatar])
+
   function saveData() {
-    const node = document.getElementById('svg-image')
-    console.log(node)
+    if (canvas.current) {
+      const link = document.createElement('a')
+      link.download = 'my-image.png'
+      link.href = svg
+      link.click()
+    }
     props.onResult(true)
   }
 
   const team =
     avatar?.attributes.find((attr) => attr.trait_type === 'Team')?.value || ''
-
   const country =
     avatar?.attributes.find((attr) => attr.trait_type === 'Country')?.value ||
     ''
-
-  const seed =
-    avatar?.attributes.find((attr) => attr.trait_type === 'Seed')?.value || ''
+  const hairColor =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Hair Color')
+      ?.value || ''
+  const top =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Top')?.value || ''
+  const hatColor =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Hat Color')?.value ||
+    ''
+  const clothes =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Clothes')?.value ||
+    ''
+  const clothesColor =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Clothes Color')
+      ?.value || ''
+  const eyes =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Eyes')?.value || ''
+  const eyebrow =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Eyebrow')?.value ||
+    ''
+  const mouth =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Mouth')?.value || ''
+  const skin =
+    avatar?.attributes.find((attr) => attr.trait_type === 'Skin')?.value || ''
 
   const viewAdButtonRef = useRef(null)
   return (
@@ -156,8 +206,8 @@ export function EditorModal(props: Props) {
                   >
                     {action} your NFT
                   </Dialog.Title>
-                  <div className="my-2 md:my-8 flex justify-center items-center w-full">
-                    <img src={svg} height={240} width={240} id="svg-image" />
+                  <div className="my-2 md:my-4 flex justify-center items-center w-full">
+                    <img ref={canvas} src={svg} height={240} width={240} />
                   </div>
                 </div>
               </div>
@@ -167,11 +217,8 @@ export function EditorModal(props: Props) {
                     <div className="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
                       <div>
                         <h3 className="text-lg leading-6 font-medium text-white">
-                          Your information
+                          NFT Metadata
                         </h3>
-                        <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                          This is the NFT metadata.
-                        </p>
                       </div>
                       <div className="space-y-6 sm:space-y-5">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
@@ -258,20 +305,182 @@ export function EditorModal(props: Props) {
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
                           <label
-                            htmlFor="seed"
+                            htmlFor="hair-color"
                             className="block text-sm font-medium text-gray-300 w-20"
                           >
-                            Seed Paraphrase
+                            Top
                           </label>
                           <div className="mt-1 sm:mt-0 w-full">
-                            <input
-                              type="text"
-                              id="Seed"
+                            <select
+                              id="Top"
                               className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
-                              value={seed}
+                              value={top}
                               onChange={updateProperty}
-                              placeholder="You can type whatever you want here"
-                            />
+                            >
+                              {topOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Hat Color
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Hat Color"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={hatColor}
+                              onChange={updateProperty}
+                            >
+                              {hatColorOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Hair Color
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Hair Color"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={hairColor}
+                              onChange={updateProperty}
+                            >
+                              {hairColorOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Clothes
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Clothes"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={clothes}
+                              onChange={updateProperty}
+                            >
+                              {clothesOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Clothes Color
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Clothes Color"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={clothesColor}
+                              onChange={updateProperty}
+                            >
+                              {clotherColorOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Eyes
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Eyes"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={eyes}
+                              onChange={updateProperty}
+                            >
+                              {eyesOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Eyebrow
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Eyebrow"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={eyebrow}
+                              onChange={updateProperty}
+                            >
+                              {eyebrowOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Mouth
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Mouth"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={mouth}
+                              onChange={updateProperty}
+                            >
+                              {mouthOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 sm:space-x-5">
+                          <label
+                            htmlFor="hair-color"
+                            className="block text-sm font-medium text-gray-300 w-20"
+                          >
+                            Skin
+                          </label>
+                          <div className="mt-1 sm:mt-0 w-full">
+                            <select
+                              id="Skin"
+                              className="px-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md h-10"
+                              value={skin}
+                              onChange={updateProperty}
+                            >
+                              {skinOptions.map((o) => (
+                                <option key={o}>{o}</option>
+                              ))}
+                            </select>
                           </div>
                         </div>
                       </div>
