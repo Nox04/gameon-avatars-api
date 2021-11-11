@@ -17,7 +17,12 @@ const IndexPage = () => {
       case WalletStatus.NOT_IN_NETWORK:
       case WalletStatus.SWITCHING_NETWORK:
         return (
-          <NotInNetwork walletStatus={status} switchNetwork={switchNetwork} />
+          <NotInNetwork
+            walletStatus={status}
+            switchNetwork={switchNetwork}
+            wallet={wallet}
+            disconnect={disconnect}
+          />
         )
       default:
         return <ConnectWallet walletStatus={status} connectWallet={connect} />
