@@ -18,7 +18,7 @@ export function Minted(props: Props) {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-5 w-full">
+    <div className="flex flex-col items-center space-y-5 w-full py-20">
       <div className="flex flex-1 flex-col w-full max-w-2xl items-center space-y-4 lg:items-start lg:space-x-4 lg:flex-row lg:space-y-0">
         <Image
           src={props.avatar?.image || '/assets/loading.svg'}
@@ -27,14 +27,14 @@ export function Minted(props: Props) {
           placeholder="blur"
           blurDataURL="/assets/loading.svg"
         />
-        <div className="flex flex-1 justify-center flex-wrap flex-col space-y-2 w-full max-w-sm">
-          <div className="flex flex-col justify-center py-2 mx-2 flex-1 bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-3/4">
+          <div className="flex flex-col justify-center py-2 w-full bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600">
             <dt className="font-bold text-gray-300 text-center">Name</dt>
             <dd className="text-sm text-white text-center">
               {props.avatar.name}
             </dd>
           </div>
-          <div className="flex flex-col justify-center py-2 mx-2 flex-1 bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600">
+          <div className="flex flex-col justify-center py-2 w-full bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600">
             <dt className="font-bold text-gray-300 text-center">Role</dt>
             <dd className="text-sm text-white text-center">
               {props.avatar.description}
@@ -44,7 +44,7 @@ export function Minted(props: Props) {
             return (
               <div
                 key={attr.trait_type}
-                className="flex flex-col justify-center py-2 mx-2 flex-1 bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600"
+                className="flex flex-col justify-center py-2 w-full bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600"
               >
                 <dt className="font-bold text-gray-300 text-center">
                   {attr.trait_type}

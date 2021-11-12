@@ -29,7 +29,7 @@ const IndexPage = () => {
   }
 
   return (
-    <main className="bg-gray-800 h-screen flex flex-col text-white justify-center items-center space-y-5">
+    <main className="bg-gray-800 min-h-screen flex flex-col text-white justify-center items-center space-y-5">
       {renderContent()}
     </main>
   )

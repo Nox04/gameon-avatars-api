@@ -63,7 +63,7 @@ export function MainApp(props: Props) {
   }
 
   return (
-    <div className="w-full max-w-screen-xl flex flex-col h-full">
+    <div className="w-full max-w-screen-xl flex flex-col min-h-screen">
       <Header
         wallet={props.wallet}
         disconnect={props.disconnect}
