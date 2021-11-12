@@ -131,6 +131,12 @@ export function EditorModal(props: Props) {
     // link.click()
   }
 
+  function closeDialog() {
+    if (!processing) {
+      props.onResult(false)
+    }
+  }
+
   const team =
     avatar?.attributes.find((attr) => attr.trait_type === 'Team')?.value || ''
   const country =
@@ -169,7 +175,7 @@ export function EditorModal(props: Props) {
         className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={viewAdButtonRef}
         open={open}
-        onClose={() => onResult(false)}
+        onClose={closeDialog}
       >
         <div className="flex justify-center min-h-screen p-4 text-center sm:px-4 sm:py-0">
           <Transition.Child
@@ -203,7 +209,7 @@ export function EditorModal(props: Props) {
                 <button
                   type="button"
                   className="bg-gray-900 rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => onResult(false)}
+                  onClick={closeDialog}
                 >
                   <span className="sr-only">Close</span>
                   <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -514,7 +520,9 @@ export function EditorModal(props: Props) {
                     height="32"
                     alt="mint nft"
                   />
-                  <span className="ml-4">{action} NFT</span>
+                  <span className="ml-4">
+                    {processing ? `Minting NFT...` : `${action} NFT`}
+                  </span>
                 </button>
               </div>
             </div>

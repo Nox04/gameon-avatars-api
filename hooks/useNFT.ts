@@ -42,6 +42,7 @@ export function useNFT(wallet: string) {
           callback()
           await fetchNFTId()
           setStatus(NFTStatus.MINTED)
+          toast.error('NFT minted!')
         }
       }
     }
