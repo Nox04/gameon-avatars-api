@@ -3,6 +3,7 @@ import { Contract, ethers } from 'ethers'
 import GameOnAvatars from '../contracts/GameOnAvatars.json'
 import { Avatar, NFTStatus } from '../types'
 import { upsertAvatar } from '../services/api.service'
+import { toast } from 'react-toastify'
 
 const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
 
@@ -40,6 +41,7 @@ export function useNFT(wallet: string) {
           await upsertAvatar({ ...tempAvatar, id: String(tokenId.toNumber()) })
           callback()
           await fetchNFTId()
+          setStatus(NFTStatus.MINTED)
         }
       }
     }
@@ -75,14 +77,15 @@ export function useNFT(wallet: string) {
   async function mint(avatar: Avatar, callback: () => void) {
     try {
       if (avatarContract) {
+        setStatus(NFTStatus.MINTING)
         setTempAvatar(avatar)
         setCallback(() => callback)
-        console.log('Minting character in progress...')
         const mintTxn = await avatarContract.mintAvatar()
         await mintTxn.wait()
-        console.log('mintTxn:', mintTxn)
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message)
+      setStatus(NFTStatus.NOT_MINTED)
       console.warn('MintCharacterAction Error:', error)
     }
   }
