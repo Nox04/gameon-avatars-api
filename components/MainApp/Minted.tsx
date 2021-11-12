@@ -65,7 +65,7 @@ export function Minted(props: Props) {
           <span className="ml-4">Update your NFT</span>
         </button>
         <a
-          href={`https://opensea.io/assets/${props.contractAddress}/${props.nftId}`}
+          href={`https://opensea.io/assets/matic/${props.contractAddress}/${props.nftId}`}
           className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full max-w-xs"
           target="_blank"
         >

@@ -40,7 +40,7 @@ export function Header(props: Props) {
       </div>
       <div className="flex space-x-8">
         <a
-          href={`https://opensea.io/assets/${props.contractAddress}/`}
+          href={`https://opensea.io/collection/gameon-avatars`}
           className="hidden sm:flex h-full  justify-center items-center"
           target="_blank"
         >
