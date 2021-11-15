@@ -317,6 +317,7 @@ export function EditorModal(props: Props) {
                               <option>Mexico</option>
                               <option>Colombia</option>
                               <option>Peru</option>
+                              <option>Brazil</option>
                             </select>
                           </div>
                         </div>
