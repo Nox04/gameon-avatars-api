@@ -3,6 +3,7 @@ import React from 'react'
 import { Avatar, NFTStatus } from '../../types'
 import { PencilAltIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import { Loading } from '../Loading'
+import QRCode from 'qrcode'
 
 type Props = {
   nftId: number
@@ -10,23 +11,44 @@ type Props = {
   openEditor: () => void
   contractAddress: string
   avatar?: Avatar
+  wallet: string
 }
 
 export function Minted(props: Props) {
+  const [qrCode, setQrCode] = React.useState<string | undefined>(undefined)
   if (!props.avatar) {
     return <Loading size="64" />
   }
 
+  async function fetchQRCode() {
+    const result = await fetch(`/api/qr/${props.wallet}`)
+    const response = await result.text()
+    console.log(response)
+    const qr = await QRCode.toDataURL(JSON.stringify(response))
+    setQrCode(qr)
+  }
+
+  React.useEffect(() => {
+    fetchQRCode()
+  }, [props.wallet])
+
   return (
     <div className="flex flex-col items-center space-y-5 w-full py-20">
       <div className="flex flex-1 flex-col w-full max-w-2xl items-center space-y-4 lg:items-start lg:space-x-4 lg:flex-row lg:space-y-0">
-        <Image
-          src={props.avatar?.image || '/assets/loading.svg'}
-          width={300}
-          height={300}
-          placeholder="blur"
-          blurDataURL="/assets/loading.svg"
-        />
+        <div className="flex flex-col justify-between">
+          <Image
+            src={props.avatar?.image || '/assets/loading.svg'}
+            width={300}
+            height={300}
+          />
+          <div className="mt-4">
+            <Image
+              src={qrCode || '/assets/loading.svg'}
+              width={300}
+              height={300}
+            />
+          </div>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-3/4">
           <div className="flex flex-col justify-center py-2 w-full bg-blue-500 bg-opacity-25 rounded-lg border-2 border-blue-600">
             <dt className="font-bold text-gray-300 text-center">Name</dt>

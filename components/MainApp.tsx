@@ -45,6 +45,7 @@ export function MainApp(props: Props) {
             nftId={nftId}
             contractAddress={contractAddress}
             avatar={wipAvatar}
+            wallet={props.wallet}
           />
         )
       default:

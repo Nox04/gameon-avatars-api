@@ -124,11 +124,6 @@ export function EditorModal(props: Props) {
     } catch (e) {
       toast.error('Error saving the NFT data, please try again later')
     }
-
-    // const link = document.createElement('a')
-    // link.download = 'my-image.png'
-    // link.href = svg
-    // link.click()
   }
 
   function closeDialog() {

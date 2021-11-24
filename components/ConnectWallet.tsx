@@ -36,7 +36,7 @@ const ConnectWallet = (props: Props) => {
   return (
     <>
       <Lottie options={defaultOptions} height={300} width={300} />
-      <span className="text-4xl font-bold">GameOn Avatars</span>
+      <span className="text-4xl font-bold">Avatars</span>
       <button
         className="font-semibold inline-flex items-center px-6 py-3 border border-transparent shadow-md rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={connectToWallet}
